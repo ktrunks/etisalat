@@ -26,6 +26,8 @@ class _MyAppState extends State<MyApp> {
   bool displayWebview = false;
   String webPortalUrl = '';
   String transactionId = '';
+  bool paymentStatusDisplay = false;
+  String paymentStatus = '';
 
   @override
   void initState() {
@@ -91,39 +93,48 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(
                   height: 10,
                 ),
-                Center(
-                  child: Text('Running on: $_platformVersion\n'),
-                ),
+                paymentStatusDisplay
+                    ? Center(
+                        child: Text('Payment Statuc : $paymentStatus\n'),
+                      )
+                    : Container(),
               ],
             ),
-            displayWebview
-                ? InAppWebView(
-                    initialUrlRequest: URLRequest(
-                        url: Uri.parse(
-                          webPortalUrl,
-                        ),
-                        body: Uint8List.fromList(utf8.encode(
-                            jsonEncode({"Transaction ID": transactionId}))),
-                        method: "POST"),
-                    shouldOverrideUrlLoading:
-                        (controller, navigationAction) async {
-                      final uri = navigationAction.request.url;
-                      debugPrint('navigation url --- ${uri!.path}');
-                      return NavigationActionPolicy.CANCEL;
+            Visibility(
+              visible: displayWebview,
+              child: InAppWebView(
+                initialUrlRequest: URLRequest(
+                    url: Uri.parse(
+                      webPortalUrl,
+                    ),
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    onWebViewCreated: (InAppWebViewController controller) {},
-                    onLoadStart:
-                        (InAppWebViewController? controller, Uri? url) {
-                      debugPrint('on Load Start --- ${url!.path}');
-                    },
-                    onLoadStop:
-                        (InAppWebViewController? controller, Uri? url) async {
-                      debugPrint('on Load Stop --- ${url!.path}');
-                    },
-                    onProgressChanged:
-                        (InAppWebViewController controller, int progress) {},
-                  )
-                : Container(),
+                    body: Uint8List.fromList(
+                        utf8.encode("TransactionID=$transactionId")),
+                    method: "POST"),
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  final uri = navigationAction.request.url;
+                  debugPrint('navigation url --- ${uri!.path}');
+                  return NavigationActionPolicy.CANCEL;
+                },
+                onWebViewCreated: (InAppWebViewController controller) {},
+                onLoadStart: (InAppWebViewController? controller, Uri? url) {
+                  if (url!.path == "/callbackURL") {
+                    displayWebview = false;
+                    setState(() {});
+                    paymenFinalisationApi();
+                  }
+                  debugPrint('on Load Start --- ${url.path}');
+                },
+                onLoadStop:
+                    (InAppWebViewController? controller, Uri? url) async {
+                  debugPrint('on Load Stop --- ${url!.path}');
+                },
+                onProgressChanged:
+                    (InAppWebViewController controller, int progress) {},
+              ),
+            )
           ],
         ),
       ),
@@ -140,7 +151,7 @@ class _MyAppState extends State<MyApp> {
       "Store": "0000",
       "Terminal": "0000",
       "Channel": "Web",
-      'Amount': "2.00",
+      'Amount': "10.00",
       'Customer': 'Demo Merchant',
       'OrderName': "Paybill",
       'UserName': 'Demo_fY9c',
@@ -152,6 +163,8 @@ class _MyAppState extends State<MyApp> {
         Map<dynamic, dynamic> response = result as Map;
         if (response.containsKey(2) && response[2] != null) {
           webPortalUrl = response[2] as String;
+          paymentStatusDisplay = false;
+          paymentStatus = '';
           displayWebview = true;
           transactionId = response[4] as String;
           setState(() {});
@@ -164,7 +177,6 @@ class _MyAppState extends State<MyApp> {
       return null;
     }
   }
-
 
   void paymentAuthorisation() async {
     PaymentCardRequest paymentCardRequest = new PaymentCardRequest();
@@ -207,23 +219,19 @@ class _MyAppState extends State<MyApp> {
 
   void paymenFinalisationApi() async {
     Map<String, dynamic> data = {};
-    data['TransactionID'] = "208503711810";
+    data['TransactionID'] = transactionId;
     data['Customer'] = 'Demo Merchant';
     data['UserName'] = "Demo_fY9c";
     data['Password'] = "Comtrust@20182018";
     try {
       var result = await platform.invokeMethod('finalization', data);
       if (result != null) {
-        if (result is Map<int, String>) {
-          Map<int, String> response = result;
-          if (response.length == 2) {
-            for (int i = 0; i < response.length; i++) {
-              print(">>> " + response.values.elementAt(i));
-            }
-          }
+        if (result.containsKey(2) && result[2] != null) {
+          paymentStatusDisplay = true;
+          paymentStatus = result[2] as String;
+          setState(() {});
         }
       }
-      debugPrint('Result: $result ');
       return result;
     } on PlatformException catch (e) {
       debugPrint("Error: '${e.message}'.");
