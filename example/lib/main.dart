@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 paymentStatusDisplay
                     ? Center(
-                        child: Text('Payment Statuc : $paymentStatus\n'),
+                        child: Text('Payment Status : $paymentStatus\n'),
                       )
                     : Container(),
               ],
@@ -159,8 +159,15 @@ class _MyAppState extends State<MyApp> {
     };
     try {
       var result = await platform.invokeMethod('registration', data);
+      Map<dynamic, dynamic> response;
       if (result != null) {
-        Map<dynamic, dynamic> response = result as Map;
+        if (result is List) {
+          debugPrint('ios response --- ${result}');
+          List<dynamic> res = result as List;
+          response = res.elementAt(0);
+        } else
+          response = result as Map;
+
         if (response.containsKey(2) && response[2] != null) {
           webPortalUrl = response[2] as String;
           paymentStatusDisplay = false;
@@ -225,14 +232,20 @@ class _MyAppState extends State<MyApp> {
     data['Password'] = "Comtrust@20182018";
     try {
       var result = await platform.invokeMethod('finalization', data);
+      Map<dynamic, dynamic> response;
       if (result != null) {
-        if (result.containsKey(2) && result[2] != null) {
+        if (result is List) {
+          debugPrint('ios response --- ${result}');
+          List<dynamic> res = result as List;
+          response = res.elementAt(0);
+        } else
+          response = result as Map;
+        if (response.containsKey(2) && response[2] != null) {
           paymentStatusDisplay = true;
-          paymentStatus = result[2] as String;
+          paymentStatus = response[2] as String;
           setState(() {});
         }
       }
-      return result;
     } on PlatformException catch (e) {
       debugPrint("Error: '${e.message}'.");
       return null;

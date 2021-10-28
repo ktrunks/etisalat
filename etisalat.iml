@@ -9,6 +9,12 @@
       <excludeFolder url="file://$MODULE_DIR$/example/build" />
       <excludeFolder url="file://$MODULE_DIR$/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/example/linux/flutter/ephemeral/.plugin_symlinks/etisalat/build" />
+      <excludeFolder url="file://$MODULE_DIR$/example/linux/flutter/ephemeral/.plugin_symlinks/etisalat/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/example/linux/flutter/ephemeral/.plugin_symlinks/etisalat/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/etisalat/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/etisalat/build" />
+      <excludeFolder url="file://$MODULE_DIR$/example/windows/flutter/ephemeral/.plugin_symlinks/etisalat/.pub" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
