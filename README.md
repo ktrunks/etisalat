@@ -23,6 +23,7 @@ Same can be used in scenario:
 
 Usage of this plugin is to avoid writing native api call in the application.
 [For more information](https://www.etisalat.ae/en/index.jsp)
+ and
 [Api Documentation](https://github.com/ktrunks/etisalat/blob/master/EPG%20REST%20Integration%20V1.7%20(2).pdf)
 
 
