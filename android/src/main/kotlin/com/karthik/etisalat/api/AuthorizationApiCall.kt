@@ -14,7 +14,7 @@ class AuthorizationApiCall {
 
     fun api(arg: Map<String, Objects>, result: MethodChannel.Result) {
         val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl("http://ipg.comtrust.ae.2443")
+                .baseUrl("https://ipg.comtrust.ae:2443")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         var authData = Authorization().getAuthorizationData(arg)
