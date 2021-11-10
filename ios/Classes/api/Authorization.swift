@@ -13,7 +13,7 @@ func AuthorizationApi(data: [String:String],result: @escaping FlutterResult)
         print("responce",data)
         print(data["UserName"]! as String)
         //code to register user
-        var urlRequest = URLRequest(url: URL(string: "https://demo-ipg.ctdev.comtrust.ae:2443")!)
+        var urlRequest = URLRequest(url: URL(string: "https://ipg.comtrust.ae:2443")!)
         urlRequest.httpMethod = "POST"
         let request = AuthorizationRequest(authorization: Authorization(customer: data["Customer"]!, language: data["Language"]!, currency: data["Currency"]!, orderName: data["OrderName"]!, orderID: data["OrderID"]!, channel: data["Channel"]!, amount: data["Amount"]!, transactionHint: data["TransactionHint"]!, cardNumber: data["CardNumber"]!, expiryMonth: data["ExpiryMonth"]!, expiryYear: data["ExpiryYear"]!, verifyCode: data["VerifyCode"]!, userName: data["UserName"]!, password: data["Password"]!))
         do {

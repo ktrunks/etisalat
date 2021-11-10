@@ -12,7 +12,7 @@ func FinalizationApi(data: [String:String],result: @escaping FlutterResult)
         print("responce",data)
         print(data["UserName"]! as String)
         //code to register user
-        var urlRequest = URLRequest(url: URL(string: "https://demo-ipg.ctdev.comtrust.ae:2443")!)
+        var urlRequest = URLRequest(url: URL(string: "https://ipg.comtrust.ae:2443")!)
         urlRequest.httpMethod = "POST"
         let request = FinalizationRequest(finalization:  Finalization(
             transactionID: data["TransactionID"]!,
