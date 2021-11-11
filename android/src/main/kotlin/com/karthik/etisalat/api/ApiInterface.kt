@@ -14,16 +14,16 @@ import retrofit2.http.POST
 interface ApiInterface {
     @Headers("Content-Type: application/json",
             "Accept: application/json")
-    @POST("https://demo-ipg.ctdev.comtrust.ae:2443")
+    @POST("https://ipg.comtrust.ae:2443")
     fun apiPaymentCall(@Body detailsRequest: DetailsRequest): Call<DetailsResponse?>
 
     @Headers("Content-Type: application/json",
             "Accept: application/json")
-    @POST("https://demo-ipg.ctdev.comtrust.ae:2443")
+    @POST("https://ipg.comtrust.ae:2443")
     fun apiRegistrationCall(@Body detailsRequest: RegistrationRequest): Call<PaymentRegistrationResponse?>
 
     @Headers("Content-Type: application/json",
             "Accept: application/json")
-    @POST("https://demo-ipg.ctdev.comtrust.ae:2443")
+    @POST("https://ipg.comtrust.ae:2443")
     fun apiFinalizationCall(@Body detailsRequest: FinalizationRequest): Call<FinalizationResponse?>
 }
